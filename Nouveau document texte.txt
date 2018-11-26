@@ -1,0 +1,86 @@
+function maxSpeedX(vitesseX) {
+	if(vitesseX > VITESSE_MAX) {
+		vitesseX = VITESSE_MAX;
+	}
+	if(vitesseX < -VITESSE_MAX) {
+		vitesseX = -VITESSE_MAX;
+	}
+	return vitesseX;
+} 
+
+function jump(vitesseY){
+	if(vitesseY > VITESSE_MAX) {
+		vitesseY = VITESSE_MAX;
+	}
+	if(vitesseY < -VITESSE_MAX) {
+		vitesseY = -VITESSE_MAX;
+	}
+
+	return vitesseY;
+}
+
+function draw(){
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	if(stay) {
+
+		context.drawImage(sprites, 64, 0, 64, 64, x, y, largeur, largeur );
+	} else {
+
+		drawBomber(x, y, step);	
+	}
+	x+= vitesseX;
+	
+	if (y+100 > canvas.height){
+		gravity=0.00;
+		if(vitesseY>0){
+			vitesseY=0;
+		}
+	} else {
+		gravity =0.05;
+	}
+		y+=vitesseY;
+
+	vitesseY+=gravity;
+	
+}
+
+function drawBomber(x, y, step){
+	var s = r/8;
+	context.drawImage(sprites, 64*step, 0, 64, 64, x, y, 32, 32 );
+}
+
+function update() {
+ timeline++;
+ if (timeline==8){
+ 	timeline=0;
+ 	    step++;
+ }
+    
+  if (step >= 6) {
+  	step = 0;
+  	stay = true;
+  } 
+}
+
+function collisionCanevas(largeur, canvasSize, x) {
+	var colision = false;
+	if(x<0 || x + largeur >= canvasSize) {
+		colision = true;
+	}
+	return colision;
+}
+
+function applicationRebond(colision, vitesseX, x, largeur, ) {
+	if(colision) {
+		vitesseX *= -1;
+		if(x<0) {
+			x = 5;	
+		} else {
+			x = canvas.width - 5 - largeur;
+		}
+	}
+	var tab = [];
+	tab['z'] = x;
+	tab ['vitesseX'] = vitesseX;
+	return tab;
+}
